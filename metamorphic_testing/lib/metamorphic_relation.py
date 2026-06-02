@@ -13,13 +13,13 @@ from scipy import ndimage
 #    return np.array(new_dset)
 
 # 시계 방향 회전(봉)
-def T(dset):
-    new_dset = []
-    rotate = -9
-    for d in dset:
-        new_d = ndimage.rotate(d, rotate, reshape=False)
-        new_dset.append(new_d)
-    return np.array(new_dset)
+# def T(dset):
+#     new_dset = []
+#     rotate = -9
+#     for d in dset:
+#         new_d = ndimage.rotate(d, rotate, reshape=False)
+#         new_dset.append(new_d)
+#     return np.array(new_dset)
 
 # 흐림처리(준)
 # def T(dset):
@@ -31,14 +31,18 @@ def T(dset):
 #     return np.array(new_dset)
 
 
-# 흑백처리 / 이진화처리(봉)
-# def T(dset):
-#     new_dset = []
-#     threshold = 0.45
-#     for d in dset:
-#         new_d = np.where(d >= threshold, 1.0, 0.0)
-#         new_dset.append(new_d)
-#     return np.array(new_dset)
+# 밝기 조절(봉)
+def T(dset):
+    new_dset = []
+
+    brightness = -0.05
+
+    for d in dset:
+        new_d = d + brightness
+        new_d = np.clip(new_d, 0.0, 1.0)
+        new_dset.append(new_d)
+
+    return np.array(new_dset)
 
 
 # 점추가 (준)
