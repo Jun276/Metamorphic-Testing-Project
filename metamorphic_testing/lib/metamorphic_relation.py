@@ -22,13 +22,13 @@ from scipy import ndimage
 #     return np.array(new_dset)
 
 # 흐림처리(준)
-# def T(dset):
-#     new_dset = []
-#     sigma = 1.0 
-#     for d in dset:
-#         new_d = ndimage.gaussian_filter(d, sigma=sigma)
-#         new_dset.append(new_d)
-#     return np.array(new_dset)
+def T(dset):
+    new_dset = []
+    sigma = 0.5 
+    for d in dset:
+        new_d = ndimage.gaussian_filter(d, sigma=sigma)
+        new_dset.append(new_d)
+    return np.array(new_dset)
 
 
 # 밝기 어둡게(봉)
