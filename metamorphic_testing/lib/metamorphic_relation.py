@@ -22,16 +22,16 @@ from scipy import ndimage
 #     return np.array(new_dset)
 
 # 흐림처리(준)
-def T(dset):
-    new_dset = []
-    sigma = 0.5 
-    for d in dset:
-        new_d = ndimage.gaussian_filter(d, sigma=sigma)
-        new_dset.append(new_d)
-    return np.array(new_dset)
+# def T(dset):
+#     new_dset = []
+#     sigma = 0.5 
+#     for d in dset:
+#         new_d = ndimage.gaussian_filter(d, sigma=sigma)
+#         new_dset.append(new_d)
+#     return np.array(new_dset)
 
 
-# 밝기 밝게(봉)
+# 밝기 어둡게(봉)
 # def T(dset):
 #     new_dset = []
 
@@ -45,32 +45,17 @@ def T(dset):
 #     return np.array(new_dset)
 
 # 밝기 어둡게(봉)
-# def T(dset):
-#     new_dset = []
+def T(dset):
+    new_dset = []
 
-#     brightness = 0.05
+    brightness = 0.05
 
-#     for d in dset:
-#         new_d = d + brightness
-#         new_d = np.clip(new_d, 0.0, 1.0)
-#         new_dset.append(new_d)
+    for d in dset:
+        new_d = d + brightness
+        new_d = np.clip(new_d, 0.0, 1.0)
+        new_dset.append(new_d)
 
-#     return np.array(new_dset)
-
-
-# 점추가 (준)
-# def add_point(img, x, y, value=1.0):
-#     new_img = img.copy()
-#     if 0 <= y < new_img.shape[0] and 0 <= x < new_img.shape[1]:
-#         new_img[y, x] = value
-#     return new_img
-
-# def T(dset):
-#     new_dset = []
-#     for d in dset:
-#         new_d = add_point(d, 14, 14)
-#         new_dset.append(new_d)
-#     return np.array(new_dset)
+    return np.array(new_dset)
 
 
 # ?흑백처리 / 이진화처리(봉)
