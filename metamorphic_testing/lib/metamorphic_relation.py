@@ -13,22 +13,22 @@ from scipy import ndimage
 #    return np.array(new_dset)
 
 # 시계 방향 회전(봉)
-def T(dset):
-    new_dset = []
-    rotate = -9
-    for d in dset:
-        new_d = ndimage.rotate(d, rotate, reshape=False)
-        new_dset.append(new_d)
-    return np.array(new_dset)
-
-# 흐림처리(준)
 # def T(dset):
 #     new_dset = []
-#     sigma = 1.0 
+#     rotate = -9
 #     for d in dset:
-#         new_d = ndimage.gaussian_filter(d, sigma=sigma)
+#         new_d = ndimage.rotate(d, rotate, reshape=False)
 #         new_dset.append(new_d)
 #     return np.array(new_dset)
+
+# 흐림처리(준)
+def T(dset):
+    new_dset = []
+    sigma = 0.5 
+    for d in dset:
+        new_d = ndimage.gaussian_filter(d, sigma=sigma)
+        new_dset.append(new_d)
+    return np.array(new_dset)
 
 
 # 흑백처리 / 이진화처리(봉)
