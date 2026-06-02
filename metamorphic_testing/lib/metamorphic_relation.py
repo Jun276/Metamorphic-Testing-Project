@@ -3,7 +3,7 @@
 import numpy as np
 from scipy import ndimage
 
-# 좌 회전(준)
+# 반시계 방향 회전(준)
 # def T(dset):
 #    new_dset = []
 #    rotate = 5
@@ -12,7 +12,7 @@ from scipy import ndimage
 #        new_dset.append(new_d)
 #    return np.array(new_dset)
 
-# 우 회전(봉)
+# 시계 방향 회전(봉)
 # def T(dset):
 #     new_dset = []
 #     rotate = -5
@@ -20,7 +20,6 @@ from scipy import ndimage
 #         new_d = ndimage.rotate(d, rotate, reshape=False)
 #         new_dset.append(new_d)
 #     return np.array(new_dset)
-
 
 # 흐림처리(준)
 # def T(dset):
@@ -31,7 +30,14 @@ from scipy import ndimage
 #         new_dset.append(new_d)
 #     return np.array(new_dset)
 
+# 흑백처리(봉)
 
+
+# 선, 점추가 (준)
+
+
+
+# 반전처리(봉)
 
 
 
