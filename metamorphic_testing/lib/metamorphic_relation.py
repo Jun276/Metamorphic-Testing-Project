@@ -4,13 +4,13 @@ import numpy as np
 from scipy import ndimage
 
 # 좌 회전(준)
-def T(dset):
-    new_dset = []
-    rotate = 5
-    for d in dset:
-        new_d = ndimage.rotate(d, rotate, reshape=False)
-        new_dset.append(new_d)
-    return np.array(new_dset)
+# def T(dset):
+#    new_dset = []
+#    rotate = 5
+#    for d in dset:
+#        new_d = ndimage.rotate(d, rotate, reshape=False)
+#        new_dset.append(new_d)
+#    return np.array(new_dset)
 
 # 우 회전(봉)
 # def T(dset):
@@ -30,6 +30,7 @@ def T(dset):
 #         new_d = ndimage.gaussian_filter(d, sigma=sigma)
 #         new_dset.append(new_d)
 #     return np.array(new_dset)
+
 
 
 
