@@ -30,15 +30,27 @@ from scipy import ndimage
 #         new_dset.append(new_d)
 #     return np.array(new_dset)
 
-# 흑백처리(봉)
+
+# 흑백처리 / 이진화처리(봉)
+# def T(dset):
+#     new_dset = []
+#     threshold = 0.45
+#     for d in dset:
+#         new_d = np.where(d >= threshold, 1.0, 0.0)
+#         new_dset.append(new_d)
+#     return np.array(new_dset)
 
 
 # 선, 점추가 (준)
 
 
-
 # 반전처리(봉)
-
+# def T(dset):
+#     new_dset = []
+#     for d in dset:
+#         new_d = 1.0 - d
+#         new_dset.append(new_d)
+#     return np.array(new_dset)
 
 
 def E(source_y, follow_y):
