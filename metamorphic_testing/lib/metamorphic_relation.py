@@ -31,14 +31,18 @@ def T(dset):
     return np.array(new_dset)
 
 
-# 흑백처리 / 이진화처리(봉)
-# def T(dset):
-#     new_dset = []
-#     threshold = 0.45
-#     for d in dset:
-#         new_d = np.where(d >= threshold, 1.0, 0.0)
-#         new_dset.append(new_d)
-#     return np.array(new_dset)
+# 밝기 조절(봉)
+def T(dset):
+    new_dset = []
+
+    brightness = -0.05
+
+    for d in dset:
+        new_d = d + brightness
+        new_d = np.clip(new_d, 0.0, 1.0)
+        new_dset.append(new_d)
+
+    return np.array(new_dset)
 
 
 # 점추가 (준)
