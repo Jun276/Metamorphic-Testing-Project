@@ -31,7 +31,7 @@ from scipy import ndimage
 #     return np.array(new_dset)
 
 
-# 밝기 어둡게(봉)
+# 밝기 밝게(봉)
 # def T(dset):
 #     new_dset = []
 
