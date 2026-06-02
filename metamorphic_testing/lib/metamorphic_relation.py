@@ -31,32 +31,11 @@ from scipy import ndimage
 #     return np.array(new_dset)
 
 
-<<<<<<< HEAD
 # 밝기 조절(봉)
 # def T(dset):
 #     new_dset = []
 
 #     brightness = -0.05
-=======
-# 밝기 어둡게(봉)
-# def T(dset):
-#     new_dset = []
-
-#     brightness = -0.05
-
-#     for d in dset:
-#         new_d = d + brightness
-#         new_d = np.clip(new_d, 0.0, 1.0)
-#         new_dset.append(new_d)
-
-#     return np.array(new_dset)
-
-# 밝기 어둡게(봉)
-def T(dset):
-    new_dset = []
-
-    brightness = 0.05
->>>>>>> c1682f98b0e1e8aa4060b1272ef10fb66d165a72
 
 #     for d in dset:
 #         new_d = d + brightness
