@@ -31,7 +31,7 @@ def T(dset):
     return np.array(new_dset)
 
 
-# 밝기 어둡게(봉)
+# 밝기 밝게(봉)
 # def T(dset):
 #     new_dset = []
 
@@ -45,17 +45,17 @@ def T(dset):
 #     return np.array(new_dset)
 
 # 밝기 어둡게(봉)
-def T(dset):
-    new_dset = []
+# def T(dset):
+#     new_dset = []
 
-    brightness = 0.05
+#     brightness = 0.05
 
-    for d in dset:
-        new_d = d + brightness
-        new_d = np.clip(new_d, 0.0, 1.0)
-        new_dset.append(new_d)
+#     for d in dset:
+#         new_d = d + brightness
+#         new_d = np.clip(new_d, 0.0, 1.0)
+#         new_dset.append(new_d)
 
-    return np.array(new_dset)
+#     return np.array(new_dset)
 
 
 # 점추가 (준)
