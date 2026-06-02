@@ -45,18 +45,35 @@ from scipy import ndimage
 #     return np.array(new_dset)
 
 # 밝기 어둡게(봉)
-def T(dset):
-    new_dset = []
+# def T(dset):
+#     new_dset = []
 
-    brightness = 0.05
+#     brightness = 0.05
 
-    for d in dset:
-        new_d = d + brightness
-        new_d = np.clip(new_d, 0.0, 1.0)
-        new_dset.append(new_d)
+#     for d in dset:
+#         new_d = d + brightness
+#         new_d = np.clip(new_d, 0.0, 1.0)
+#         new_dset.append(new_d)
 
-    return np.array(new_dset)
+#     return np.array(new_dset)
 
+
+# 점추가 (준)
+# def add_point(img, x, y, thickness=1):
+#     new_img = img.copy()
+#     h,w=new_img.shape[:2]
+#     for dy in range(-thickness,thickness+1):
+#         for dx in range(-thickness,thickness+1):
+#             ny,nx=y+dy,x+dx
+#             if 0<=ny<h and 0<=nx<w: new_img[ny,nx]=1.0
+#     return new_img
+
+# def T(dset):
+#     new_dset = []
+#     for d in dset:
+#         new_d = add_point(d, 14, 14)
+#         new_dset.append(new_d)
+#     return np.array(new_dset)
 
 # ?흑백처리 / 이진화처리(봉)
 # def T(dset):
