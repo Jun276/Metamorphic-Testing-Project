@@ -59,23 +59,29 @@ from scipy import ndimage
 
 
 # 점추가 (준)
-# def add_point(img, x, y, thickness=1):
+# def add_points(img, x, y, value, size=1):
 #     new_img = img.copy()
-#     h,w=new_img.shape[:2]
-#     for dy in range(-thickness,thickness+1):
-#         for dx in range(-thickness,thickness+1):
-#             ny,nx=y+dy,x+dx
-#             if 0<=ny<h and 0<=nx<w: new_img[ny,nx]=1.0
+#     for i in range(-size, size + 1):
+#         for j in range(-size, size + 1):
+#             ny = y + i
+#             nx = x + j
+#             if 0 <= ny < new_img.shape[0] and 0 <= nx < new_img.shape[1]:
+#                 new_img[ny, nx] = value
 #     return new_img
 
+
+# step = 1
 # def T(dset):
+#     global step
+#     size = step
 #     new_dset = []
 #     for d in dset:
-#         new_d = add_point(d, 14, 14)
+#         new_d = add_points(d, 14, 14, 1.0, size=size)
 #         new_dset.append(new_d)
+#     step += 1
 #     return np.array(new_dset)
 
-# ?흑백처리 / 이진화처리(봉)
+# ?흑백처리 / 이진화처리
 # def T(dset):
 #     new_dset = []
 #     threshold = 0.45
@@ -86,7 +92,7 @@ from scipy import ndimage
 
 #     return np.array(new_dset)
 
-# ?반전처리(봉)
+# ?반전처리
 # def T(dset):
 #     new_dset = []
 #     for d in dset:
