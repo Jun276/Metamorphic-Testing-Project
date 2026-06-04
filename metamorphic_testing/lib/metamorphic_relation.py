@@ -44,6 +44,29 @@ from scipy import ndimage
 
 #     return np.array(new_dset)
 
+# 점추가 (준)
+# def add_points(img, x, y, value, size=1):
+#     new_img = img.copy()
+#     for i in range(-size, size + 1):
+#         for j in range(-size, size + 1):
+#             ny = y + i
+#             nx = x + j
+#             if 0 <= ny < new_img.shape[0] and 0 <= nx < new_img.shape[1]:
+#                 new_img[ny, nx] = value
+#     return new_img
+
+# step = 1
+# def T(dset):
+#     global step
+#     size = step
+#     new_dset = []
+#     for d in dset:
+#         new_d = add_points(d, 14, 14, 1.0, size=size)
+#         new_dset.append(new_d)
+#     step += 1
+#     return np.array(new_dset)
+
+
 # 밝기 어둡게(봉)
 # def T(dset):
 #     new_dset = []
@@ -57,31 +80,7 @@ from scipy import ndimage
 
 #     return np.array(new_dset)
 
-
-# 점추가 (준)
-# def add_points(img, x, y, value, size=1):
-#     new_img = img.copy()
-#     for i in range(-size, size + 1):
-#         for j in range(-size, size + 1):
-#             ny = y + i
-#             nx = x + j
-#             if 0 <= ny < new_img.shape[0] and 0 <= nx < new_img.shape[1]:
-#                 new_img[ny, nx] = value
-#     return new_img
-
-
-# step = 1
-# def T(dset):
-#     global step
-#     size = step
-#     new_dset = []
-#     for d in dset:
-#         new_d = add_points(d, 14, 14, 1.0, size=size)
-#         new_dset.append(new_d)
-#     step += 1
-#     return np.array(new_dset)
-
-# ?흑백처리 / 이진화처리
+# ?이진화처리
 # def T(dset):
 #     new_dset = []
 #     threshold = 0.45
