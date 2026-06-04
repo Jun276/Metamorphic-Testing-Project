@@ -45,35 +45,34 @@ from scipy import ndimage
 #     return np.array(new_dset)
 
 # 점 개수 추가 (준)
-import random
+# import random
 
-def add_points(img):
+# def add_points(img):
 
-    new_img = img.copy()
+#     new_img = img.copy()
 
-    y = random.randint(0, 27)
-    x = random.randint(0, 27)
+#     y = random.randint(0, 27)
+#     x = random.randint(0, 27)
 
-    for dy in [-1, 0, 1]:
-        for dx in [-1, 0, 1]:
+#     for dy in [-1, 0, 1]:
+#         for dx in [-1, 0, 1]:
 
-            ny = y + dy
-            nx = x + dx
+#             ny = y + dy
+#             nx = x + dx
 
-            if 0 <= ny < 28 and 0 <= nx < 28:
-                new_img[ny, nx, 0] = 1.0
+#             if 0 <= ny < 28 and 0 <= nx < 28:
+#                 new_img[ny, nx, 0] = 1.0
 
-    return new_img
+#     return new_img
 
+# def T(dset):
 
-def T(dset):
+#     new_dset = []
 
-    new_dset = []
+#     for d in dset:
+#         new_dset.append(add_points(d))
 
-    for d in dset:
-        new_dset.append(add_points(d))
-
-    return np.array(new_dset)
+#     return np.array(new_dset)
 
 
 # 밝기 어둡게(봉)
