@@ -3,7 +3,7 @@
 import numpy as np
 from scipy import ndimage
 
-# 반시계 방향 회전(준)
+# 1. 반시계 방향 회전(준)
 # def T(dset):
 #    new_dset = []
 #    rotate = 9
@@ -12,7 +12,7 @@ from scipy import ndimage
 #        new_dset.append(new_d)
 #    return np.array(new_dset)
 
-# 시계 방향 회전(봉)
+# 2. 시계 방향 회전(봉)
 # def T(dset):
 #     new_dset = []
 #     rotate = -9
@@ -21,7 +21,7 @@ from scipy import ndimage
 #         new_dset.append(new_d)
 #     return np.array(new_dset)
 
-# 흐림처리(준)
+# 3. 흐림처리(준)
 # def T(dset):
 #     new_dset = []
 #     sigma = 0.5 
@@ -31,7 +31,7 @@ from scipy import ndimage
 #     return np.array(new_dset)
 
 
-# 밝기 밝게(봉)
+# 4. 밝기 밝게(봉)
 # def T(dset):
 #     new_dset = []
 
@@ -44,7 +44,7 @@ from scipy import ndimage
 
 #     return np.array(new_dset)
 
-# 점 개수 추가 (준)
+# 5. 점 개수 추가 (준)
 # import random
 
 # def add_points(img):
@@ -75,7 +75,7 @@ from scipy import ndimage
 #     return np.array(new_dset)
 
 
-# 밝기 어둡게(봉)
+# 6. 밝기 어둡게(봉)
 # def T(dset):
 #     new_dset = []
 
