@@ -3,7 +3,7 @@
 import numpy as np
 from scipy import ndimage
 
-# 1. 점 1개씩 추가, 흐림추가 (준혁)
+# 1. 점 1개씩 추가, 흐림추가 (st#1: 준혁)
 # import random
 
 # def add_points(img):
@@ -36,7 +36,7 @@ from scipy import ndimage
 #     return np.array(new_dset)
 
 
-#2. 반시계 방향 회전, 밝게 (봉헌)
+#2. 반시계 방향 회전, 밝게 (st#2: 봉헌)
 # def T(dset):
 #     new_dset = []
 #     rotate = 9
