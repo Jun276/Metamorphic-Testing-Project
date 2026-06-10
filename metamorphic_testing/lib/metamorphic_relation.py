@@ -40,7 +40,7 @@ from scipy import ndimage
 def T(dset):
     new_dset = []
     rotate = 9
-    brightness = -0.05
+    brightness = -0.04
 
     for d in dset:
         new_d = ndimage.rotate(d, rotate, reshape=False)

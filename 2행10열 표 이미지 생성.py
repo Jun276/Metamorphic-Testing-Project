@@ -1,228 +1,252 @@
-import os
 import re
+from pathlib import Path
 
-from PIL import Image, ImageDraw
+from PIL import Image, ImageDraw, ImageFont
 
-# ==================================================
-# 사용자 설정
-# ==================================================
 
-MNIST_PATH = r"C:\선문대학교\강의\3학년\1학기\전공\소프트웨어품질관리\4. 팀플\팀프로젝트 #2\Metamorphic-Testing-Project\metamorphic_testing\example\mnist"
+SCRIPT_DIR = Path(__file__).resolve().parent
+MNIST_PATH = SCRIPT_DIR / "metamorphic_testing" / "example" / "mnist"
+OUTPUT_ROOT = SCRIPT_DIR / "ppt_slide_grids"
 
-IMAGE_SIZE = 150
+# None: create one slide image for every experiment folder.
+# Example: "20260610192028" creates only that experiment.
+TARGET_EXPERIMENT = None
 
-ROWS = 2
-COLS = 10
+CANVAS_WIDTH = 2400
+CANVAS_HEIGHT = 1350
+ROWS = 10
+COLS = 21  # source #0 + follow-up #1~#20
 
-MARGIN = 0
+PAD_X = 32
+PAD_Y = 32
+TITLE_HEIGHT = 88
+COL_LABEL_HEIGHT = 44
+ROW_LABEL_WIDTH = 86
+CELL_GAP = 4
+BORDER_WIDTH = 2
 
-BORDER_WIDTH = 3
+BACKGROUND = (248, 248, 246)
+HEADER_BG = (232, 234, 236)
+SOURCE_BG = (230, 241, 255)
+CELL_BG = (255, 255, 255)
+GRID_LINE = (175, 180, 188)
+SOURCE_BORDER = (45, 105, 185)
+OK_BORDER = (130, 135, 142)
+FAIL_BORDER = (214, 68, 68)
+TEXT = (25, 28, 32)
+SUBTEXT = (80, 86, 94)
 
-# ==================================================
-# 생성 대상 ID
-#
-# None      : 모든 ID 생성
-# "ID_1"    : ID_1만 생성
-# "ID_5"    : ID_5만 생성
-# ==================================================
 
-TARGET_ID = None
+def get_font(size, bold=False):
+    candidates = [
+        Path("C:/Windows/Fonts/malgunbd.ttf" if bold else "C:/Windows/Fonts/malgun.ttf"),
+        Path("C:/Windows/Fonts/arialbd.ttf" if bold else "C:/Windows/Fonts/arial.ttf"),
+    ]
 
-# ==================================================
-# 출력 폴더
-# ==================================================
+    for font_path in candidates:
+        if font_path.exists():
+            return ImageFont.truetype(str(font_path), size)
 
-SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
+    return ImageFont.load_default()
 
-OUTPUT_ROOT = os.path.join(
-    SCRIPT_DIR,
-    "표이미지"
-)
 
-os.makedirs(
-    OUTPUT_ROOT,
-    exist_ok=True
-)
+TITLE_FONT = get_font(30, bold=True)
+LABEL_FONT = get_font(20, bold=True)
+SMALL_FONT = get_font(16)
 
-# ==================================================
-# 실험 폴더 순회
-# ==================================================
 
-for experiment_folder in os.listdir(MNIST_PATH):
+def text_size(draw, text, font):
+    bbox = draw.textbbox((0, 0), text, font=font)
+    return bbox[2] - bbox[0], bbox[3] - bbox[1]
 
-    experiment_path = os.path.join(
-        MNIST_PATH,
-        experiment_folder
-    )
 
-    if not os.path.isdir(experiment_path):
-        continue
+def draw_centered_text(draw, rect, text, font, fill=TEXT):
+    x1, y1, x2, y2 = rect
+    width, height = text_size(draw, text, font)
+    x = x1 + (x2 - x1 - width) / 2
+    y = y1 + (y2 - y1 - height) / 2 - 1
+    draw.text((x, y), text, font=font, fill=fill)
 
-    # 타임스탬프 제거
-    experiment_name = re.sub(
-        r"\(\d+\)$",
-        "",
-        experiment_folder
-    ).strip()
 
-    print(f"\n실험 처리 중: {experiment_name}")
+def image_index(path):
+    match = re.match(r"#(\d+)_prediction_(\d+)\.png$", path.name)
+    if not match:
+        return None
+    return int(match.group(1))
 
-    # 실험별 출력 폴더
-    experiment_output_dir = os.path.join(
-        OUTPUT_ROOT,
-        experiment_name
-    )
 
-    os.makedirs(
-        experiment_output_dir,
-        exist_ok=True
-    )
+def prediction_value(path):
+    match = re.match(r"#(\d+)_prediction_(\d+)\.png$", path.name)
+    if not match:
+        return None
+    return int(match.group(2))
 
-    # ==================================================
-    # ID 폴더 순회
-    # ==================================================
 
-    for target_id in os.listdir(experiment_path):
+def id_number(path):
+    match = re.match(r"ID_(\d+)$", path.name)
+    if not match:
+        return None
+    return int(match.group(1))
 
-        id_path = os.path.join(
-            experiment_path,
-            target_id
-        )
 
-        if not os.path.isdir(id_path):
+def safe_filename(name):
+    return re.sub(r'[<>:"/\\|?*]', "_", name)
+
+
+def discover_experiments():
+    experiments = []
+
+    for path in MNIST_PATH.iterdir():
+        if not path.is_dir():
             continue
 
-        if not target_id.startswith("ID_"):
-            continue
+        id_dirs = [p for p in path.iterdir() if p.is_dir() and id_number(p) is not None]
+        if id_dirs:
+            experiments.append(path)
 
-        # 특정 ID만 생성
-        if TARGET_ID is not None:
-            if target_id != TARGET_ID:
+    experiments.sort(key=lambda p: p.name)
+
+    if TARGET_EXPERIMENT is not None:
+        experiments = [p for p in experiments if p.name == TARGET_EXPERIMENT]
+
+    return experiments
+
+
+def collect_images(experiment_path):
+    id_dirs = [p for p in experiment_path.iterdir() if p.is_dir() and id_number(p) is not None]
+    id_dirs.sort(key=id_number)
+
+    if len(id_dirs) < ROWS:
+        print(f"Warning: {experiment_path.name} has only {len(id_dirs)} ID folders.")
+
+    rows = []
+
+    for id_dir in id_dirs[:ROWS]:
+        image_map = {}
+
+        for image_path in id_dir.glob("*.png"):
+            index = image_index(image_path)
+            if index is None:
+                continue
+            if 0 <= index <= 20:
+                image_map[index] = image_path
+
+        missing = [i for i in range(COLS) if i not in image_map]
+        if missing:
+            print(f"Warning: {experiment_path.name}/{id_dir.name} missing {missing}")
+
+        rows.append((id_dir.name, image_map))
+
+    return rows
+
+
+def make_slide_grid(experiment_path):
+    rows = collect_images(experiment_path)
+    if not rows:
+        print(f"Skipped: {experiment_path.name} has no images.")
+        return None
+
+    available_width = CANVAS_WIDTH - (PAD_X * 2) - ROW_LABEL_WIDTH - ((COLS - 1) * CELL_GAP)
+    available_height = (
+        CANVAS_HEIGHT
+        - (PAD_Y * 2)
+        - TITLE_HEIGHT
+        - COL_LABEL_HEIGHT
+        - ((ROWS - 1) * CELL_GAP)
+    )
+    cell_size = min(available_width // COLS, available_height // ROWS)
+
+    grid_width = ROW_LABEL_WIDTH + (COLS * cell_size) + ((COLS - 1) * CELL_GAP)
+    grid_height = COL_LABEL_HEIGHT + (ROWS * cell_size) + ((ROWS - 1) * CELL_GAP)
+    start_x = (CANVAS_WIDTH - grid_width) // 2
+    start_y = PAD_Y + TITLE_HEIGHT
+
+    canvas = Image.new("RGB", (CANVAS_WIDTH, CANVAS_HEIGHT), BACKGROUND)
+    draw = ImageDraw.Draw(canvas)
+
+    title = f"{experiment_path.name} | Source + Follow-up Inputs"
+    subtitle = "Rows: ID_1~ID_10    Columns: Source #0, T1~T20    Red border: prediction changed"
+
+    draw.text((PAD_X, PAD_Y), title, font=TITLE_FONT, fill=TEXT)
+    draw.text((PAD_X, PAD_Y + 44), subtitle, font=SMALL_FONT, fill=SUBTEXT)
+
+    draw.rounded_rectangle(
+        [start_x, start_y, start_x + grid_width, start_y + grid_height],
+        radius=8,
+        fill=(242, 243, 244),
+        outline=GRID_LINE,
+        width=1,
+    )
+
+    # Column labels.
+    for col in range(COLS):
+        x = start_x + ROW_LABEL_WIDTH + col * (cell_size + CELL_GAP)
+        y = start_y
+        label = "Source" if col == 0 else f"T{col}"
+        fill = SOURCE_BG if col == 0 else HEADER_BG
+        draw.rectangle([x, y, x + cell_size, y + COL_LABEL_HEIGHT], fill=fill)
+        draw_centered_text(draw, (x, y, x + cell_size, y + COL_LABEL_HEIGHT), label, LABEL_FONT)
+
+    # Row labels and image cells.
+    for row_idx, (id_name, image_map) in enumerate(rows[:ROWS]):
+        y = start_y + COL_LABEL_HEIGHT + row_idx * (cell_size + CELL_GAP)
+        label_rect = (start_x, y, start_x + ROW_LABEL_WIDTH, y + cell_size)
+        draw.rectangle(label_rect, fill=HEADER_BG)
+        draw_centered_text(draw, label_rect, id_name, LABEL_FONT)
+
+        source_prediction = prediction_value(image_map[0]) if 0 in image_map else None
+
+        for col in range(COLS):
+            x = start_x + ROW_LABEL_WIDTH + col * (cell_size + CELL_GAP)
+            rect = (x, y, x + cell_size, y + cell_size)
+            draw.rectangle(rect, fill=SOURCE_BG if col == 0 else CELL_BG)
+
+            image_path = image_map.get(col)
+            if image_path is None:
+                draw_centered_text(draw, rect, "-", LABEL_FONT, fill=SUBTEXT)
+                draw.rectangle(rect, outline=GRID_LINE, width=1)
                 continue
 
-        images = []
+            with Image.open(image_path) as img:
+                img = img.convert("RGB")
+                img.thumbnail((cell_size - 10, cell_size - 10), Image.Resampling.LANCZOS)
 
-        # ==================================================
-        # #1 ~ #20 이미지 수집
-        # ==================================================
+                paste_x = x + (cell_size - img.width) // 2
+                paste_y = y + (cell_size - img.height) // 2
+                canvas.paste(img, (paste_x, paste_y))
 
-        for filename in os.listdir(id_path):
+            current_prediction = prediction_value(image_path)
+            if col == 0:
+                border = SOURCE_BORDER
+            elif source_prediction is not None and current_prediction != source_prediction:
+                border = FAIL_BORDER
+            else:
+                border = OK_BORDER
 
-            if not filename.lower().endswith(".png"):
-                continue
+            draw.rectangle(rect, outline=border, width=BORDER_WIDTH)
 
-            match = re.match(
-                r"#(\d+)_",
-                filename
-            )
+    output_file = OUTPUT_ROOT / f"{safe_filename(experiment_path.name)}_210_images_ppt_grid.png"
+    OUTPUT_ROOT.mkdir(parents=True, exist_ok=True)
+    canvas.save(output_file, quality=95)
+    return output_file
 
-            if not match:
-                continue
 
-            index = int(match.group(1))
+def main():
+    if not MNIST_PATH.exists():
+        raise FileNotFoundError(f"MNIST path not found: {MNIST_PATH}")
 
-            if 1 <= index <= 20:
-                images.append(
-                    (index, filename)
-                )
+    experiments = discover_experiments()
+    if not experiments:
+        print("No experiment folders found.")
+        return
 
-        images.sort(
-            key=lambda x: x[0]
-        )
+    for experiment_path in experiments:
+        output_file = make_slide_grid(experiment_path)
+        if output_file is not None:
+            print(f"Created: {output_file}")
 
-        if len(images) == 0:
-            print(f"이미지 없음: {target_id}")
-            continue
+    print("Done.")
 
-        if len(images) != 20:
-            print(
-                f"경고: {experiment_name} / {target_id} "
-                f"이미지 개수 = {len(images)}"
-            )
 
-        # ==================================================
-        # 캔버스 생성
-        # ==================================================
-
-        canvas_width = (
-            COLS * IMAGE_SIZE
-            + (COLS + 1) * MARGIN
-        )
-
-        canvas_height = (
-            ROWS * IMAGE_SIZE
-            + (ROWS + 1) * MARGIN
-        )
-
-        canvas = Image.new(
-            "RGB",
-            (canvas_width, canvas_height),
-            "white"
-        )
-
-        draw = ImageDraw.Draw(canvas)
-
-        # ==================================================
-        # 이미지 배치
-        # ==================================================
-
-        for idx, (_, filename) in enumerate(images):
-
-            row = idx // COLS
-            col = idx % COLS
-
-            x = (
-                MARGIN
-                + col * (IMAGE_SIZE + MARGIN)
-            )
-
-            y = (
-                MARGIN
-                + row * (IMAGE_SIZE + MARGIN)
-            )
-
-            img_path = os.path.join(
-                id_path,
-                filename
-            )
-
-            img = Image.open(
-                img_path
-            ).convert("RGB")
-
-            img = img.resize(
-                (IMAGE_SIZE, IMAGE_SIZE)
-            )
-
-            canvas.paste(
-                img,
-                (x, y)
-            )
-
-            draw.rectangle(
-                [
-                    x,
-                    y,
-                    x + IMAGE_SIZE,
-                    y + IMAGE_SIZE
-                ],
-                outline="black",
-                width=BORDER_WIDTH
-            )
-
-        # ==================================================
-        # 저장
-        # ==================================================
-
-        output_file = os.path.join(
-            experiment_output_dir,
-            f"{experiment_name}_{target_id}_grid.png"
-        )
-
-        canvas.save(output_file)
-
-        print(
-            f"생성 완료: {os.path.basename(output_file)}"
-        )
-
-print("\n모든 작업 완료")
+if __name__ == "__main__":
+    main()
