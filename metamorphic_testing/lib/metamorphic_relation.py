@@ -37,18 +37,18 @@ from scipy import ndimage
 
 
 #2. 반시계 방향 회전, 밝게
-def T(dset):
-    new_dset = []
-    rotate = 9
-    brightness = -0.04
+# def T(dset):
+#     new_dset = []
+#     rotate = 9
+#     brightness = -0.04
 
-    for d in dset:
-        new_d = ndimage.rotate(d, rotate, reshape=False)
-        new_d = new_d + brightness
-        new_d = np.clip(new_d, 0.0, 1.0)
-        new_dset.append(new_d)
+#     for d in dset:
+#         new_d = ndimage.rotate(d, rotate, reshape=False)
+#         new_d = new_d + brightness
+#         new_d = np.clip(new_d, 0.0, 1.0)
+#         new_dset.append(new_d)
 
-    return np.array(new_dset)
+#     return np.array(new_dset)
 
 
 def E(source_y, follow_y):
